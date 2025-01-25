@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>File Uploader</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #121212;
+      color: #e0e0e0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .upload-container {
+      background: #1f1f1f;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      width: 80%;
+      max-width: 600px;
+      text-align: center;
+    }
+
+    h2 {
+      font-size: 24px;
+      font-weight: 500;
+      color: #ffffff;
+      margin-bottom: 20px;
+    }
+
+    .upload-btn {
+      background: linear-gradient(45deg, #ff6a00, #ee0979);
+      padding: 12px 25px;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s ease-in-out;
+    }
+
+    .upload-btn:hover {
+      background: linear-gradient(45deg, #ee0979, #ff6a00);
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    .upload-label {
+      display: inline-block;
+      padding: 15px 30px;
+      background-color: #333;
+      color: #ddd;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 20px;
+      font-size: 16px;
+      transition: background 0.3s ease;
+    }
+
+    .upload-label:hover {
+      background-color: #444;
+    }
+
+    .status {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #76e2b3;
+    }
+
+    .status.error {
+      color: #e74c3c;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="upload-container">
+    <h2>Upload Your File</h2>
+    <label class="upload-label" for="fileInput">Choose a File</label>
+    <input type="file" id="fileInput" />
+    <button class="upload-btn" onclick="uploadFile()">Upload</button>
+    <p class="status" id="status"></p>
+  </div>
+
+  <script>
+    async function uploadFile() {
+      const file = document.getElementById('fileInput').files[0];
+      const status = document.getElementById('status');
+      if (!file) {
+        status.classList.add('error');
+        status.innerText = "Please select a file to upload.";
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      status.innerText = 'Uploading...';
+      status.classList.remove('error');
+
+      try {
+        const response = await fetch('/upload', {
+          method: 'POST',
+          body: formData,
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+          status.innerText = `File uploaded successfully!`;
+        } else {
+          status.classList.add('error');
+          status.innerText = `Error: ${result.message}`;
+        }
+      } catch (error) {
+        status.classList.add('error');
+        status.innerText = `Error: ${error.message}`;
+      }
+    }
+  </script>
+
+</body>
+</html>
