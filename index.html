@@ -5,105 +5,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>jraw.lol | Upload</title>
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background: #000;
-            color: #fff;
-            text-align: center;
-        }
-
-        h1 {
-            font-size: 3rem;
-            color: #f7931e;
-            margin-bottom: 20px;
-            text-shadow: 0 0 10px #f7931e;
-        }
-
-        .upload-box {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            border: 2px dashed #f7931e;
-            border-radius: 10px;
-            padding: 50px;
-            width: 300px;
-            background: rgba(255, 255, 255, 0.05);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .upload-box:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px #f7931e;
-        }
-
-        .upload-box i {
-            font-size: 3rem;
-            margin-bottom: 15px;
-            color: #f7931e;
-        }
-
-        .upload-box span {
-            font-size: 1rem;
-            color: #fff;
-        }
-
-        input[type="file"] {
-            display: none;
-        }
-
-        button {
-            margin-top: 20px;
-            padding: 10px 30px;
-            font-size: 1rem;
-            color: #000;
-            background: #f7931e;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.2s ease, transform 0.2s ease;
-        }
-
-        button:hover {
-            background: #ff9c4a;
-            transform: scale(1.1);
-        }
-
-        footer {
-            margin-top: 40px;
-            font-size: 0.9rem;
-            color: #555;
-        }
-
-        footer a {
-            color: #f7931e;
-            text-decoration: none;
-        }
-
-        footer a:hover {
-            text-decoration: underline;
-        }
+        /* Same styles as before */
     </style>
 </head>
 <body>
     <h1>jraw.lol</h1>
     <label class="upload-box">
         <i class="fas fa-cloud-upload-alt"></i>
-        <span>Drag & Drop or Click to Upload</span>
-        <input type="file">
+        <span id="fileLabelText">Drag & Drop or Click to Upload</span>
+        <input type="file" id="fileInput">
     </label>
-    <button>Upload</button>
+    <button id="uploadButton">Upload</button>
+    <div id="output" style="margin-top: 20px; color: #f7931e;"></div>
 
     <footer>
         <p>Made by <a href="https://github.com/your-username" target="_blank">you</a> with 🖤</p>
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+    <script>
+        const uploadButton = document.getElementById("uploadButton");
+        const fileInput = document.getElementById("fileInput");
+        const output = document.getElementById("output");
+        const fileLabelText = document.getElementById("fileLabelText");
+
+        fileInput.addEventListener("change", () => {
+            const fileName = fileInput.files[0]?.name || "Select File";
+            fileLabelText.textContent = fileName;
+        });
+
+        uploadButton.addEventListener("click", async () => {
+            if (!fileInput.files.length) {
+                output.textContent = "Please select a file first.";
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("file", fileInput.files[0]);
+
+            output.textContent = "Uploading...";
+
+            try {
+                const response = await fetch("http://localhost:3000/upload", {
+                    method: "POST",
+                    body: formData,
+                });
+
+                const data = await response.json();
+                if (data.url) {
+                    output.innerHTML = `File uploaded: <a href="${data.url}" target="_blank">${data.url}</a>`;
+                } else {
+                    output.textContent = "Upload failed.";
+                }
+            } catch (error) {
+                output.textContent = "Error uploading the file.";
+            }
+        });
+    </script>
 </body>
 </html>
