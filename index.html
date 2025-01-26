@@ -161,14 +161,15 @@
             output.textContent = "Uploading...";
 
             try {
-                const response = await fetch("http://localhost:3000/upload", {
+                // Using file.io for uploads
+                const response = await fetch("https://file.io", {
                     method: "POST",
                     body: formData,
                 });
 
                 const data = await response.json();
-                if (data.url) {
-                    output.innerHTML = `File uploaded: <a href="${data.url}" target="_blank">${data.url}</a>`;
+                if (data.success) {
+                    output.innerHTML = `File uploaded: <a href="${data.link}" target="_blank">${data.link}</a>`;
                 } else {
                     output.textContent = "Upload failed.";
                 }
