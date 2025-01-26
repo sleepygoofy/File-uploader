@@ -3,149 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>File Uploader</title>
+    <title>jraw.lol | Upload</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #0d1117;
-            color: #f0f6fc;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            height: 100vh;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            overflow: hidden;
-        }
-        
-        .container {
+            background: #000;
+            color: #fff;
             text-align: center;
-            background: #161b22;
+        }
+
+        h1 {
+            font-size: 3rem;
+            color: #f7931e;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #f7931e;
+        }
+
+        .upload-box {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 2px dashed #f7931e;
             border-radius: 10px;
             padding: 50px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            width: 100%;
-            max-width: 600px;
+            width: 300px;
+            background: rgba(255, 255, 255, 0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
-        
-        h1 {
-            font-size: 32px;
-            margin-bottom: 20px;
-            color: #58a6ff;
-        }
-        
-        .file-input {
-            display: block;
-            margin: 20px auto;
-            padding: 15px;
-            background: #58a6ff;
-            color: #0d1117;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-        
-        .file-input:hover {
-            background: #1f6feb;
-        }
-        
-        .upload-btn {
-            background: #00c3ff;
-            padding: 12px 24px;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            font-size: 18px;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: transform 0.3s ease;
-        }
-        
-        .upload-btn:hover {
+
+        .upload-box:hover {
             transform: scale(1.05);
-            background: #0db1f3;
-        }
-        
-        .status {
-            margin-top: 30px;
-            font-size: 18px;
-            color: #58a6ff;
+            box-shadow: 0 0 20px #f7931e;
         }
 
-        .fileLink {
+        .upload-box i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #f7931e;
+        }
+
+        .upload-box span {
+            font-size: 1rem;
+            color: #fff;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        button {
             margin-top: 20px;
-            font-size: 18px;
-            color: #1f6feb;
-            text-decoration: none;
-            word-wrap: break-word;
-            word-break: break-all;
-            transition: color 0.3s ease;
+            padding: 10px 30px;
+            font-size: 1rem;
+            color: #000;
+            background: #f7931e;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.2s ease;
         }
 
-        .fileLink:hover {
-            color: #0db1f3;
+        button:hover {
+            background: #ff9c4a;
+            transform: scale(1.1);
         }
-        
-        .file-info {
-            margin-top: 15px;
-            font-size: 14px;
-            color: #6a737d;
+
+        footer {
+            margin-top: 40px;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        footer a {
+            color: #f7931e;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
+    <h1>jraw.lol</h1>
+    <label class="upload-box">
+        <i class="fas fa-cloud-upload-alt"></i>
+        <span>Drag & Drop or Click to Upload</span>
+        <input type="file">
+    </label>
+    <button>Upload</button>
 
-    <div class="container">
-        <h1>Upload Your File</h1>
-        <input type="file" id="fileInput" class="file-input" />
-        <button class="upload-btn" onclick="uploadFile()">Upload</button>
-        <p id="status" class="status"></p>
-        <p id="fileLink" class="fileLink"></p>
-        <p id="fileInfo" class="file-info"></p>
-    </div>
+    <footer>
+        <p>Made by <a href="https://github.com/your-username" target="_blank">you</a> with 🖤</p>
+    </footer>
 
-    <script>
-        async function uploadFile() {
-            const file = document.getElementById('fileInput').files[0];
-            const status = document.getElementById('status');
-            const fileLinkElement = document.getElementById('fileLink');
-            const fileInfo = document.getElementById('fileInfo');
-
-            // If no file is selected, show error
-            if (!file) {
-                status.innerText = "Please select a file.";
-                fileLinkElement.innerHTML = '';
-                fileInfo.innerHTML = '';
-                return;
-            }
-
-            status.innerText = 'Processing file...';
-
-            // Simulate a delay as if uploading
-            setTimeout(() => {
-                // Simulate creating a URL for the uploaded file
-                const generatedUrl = generateFileUrl(file);
-                status.innerText = 'File uploaded successfully!';
-                fileLinkElement.innerHTML = `<a href="${generatedUrl}" target="_blank">${generatedUrl}</a>`;
-                fileInfo.innerHTML = `File Name: ${file.name} | File Size: ${(file.size / 1024).toFixed(2)} KB`;
-            }, 1000);
-        }
-
-        // Function to simulate the URL generation for the uploaded file
-        function generateFileUrl(file) {
-            // Simulate a URL like the one it would be after uploading to your custom domain
-            const fileName = file.name;
-            // Here, we use your custom domain 'jraw.lol' for the file URL
-            const url = `https://jraw.lol/${fileName}`;
-            return url;
-        }
-    </script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
 </body>
 </html>
