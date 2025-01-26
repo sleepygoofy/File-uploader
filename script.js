@@ -27,20 +27,20 @@ uploadForm.addEventListener('submit', async (event) => {
             body: formData,
         });
 
-        if (response.ok) {
-            const data = await response.json();
-            if (data.success) {
-                output.innerHTML = `
-                    <strong>File uploaded successfully!</strong><br>
-                    <a href="${data.link}" target="_blank">${data.link}</a>
-                `;
-            } else {
-                output.innerHTML = `Error: ${data.message}`;
-            }
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        if (data.success) {
+            output.innerHTML = `
+                <strong>File uploaded successfully!</strong><br>
+                <a href="${data.link}" target="_blank">${data.link}</a>
+            `;
         } else {
-            output.innerHTML = `Error: Unable to upload file (status ${response.status}).`;
+            throw new Error(data.message || "Unknown error occurred");
         }
     } catch (error) {
-        output.innerHTML = "An error occurred during the upload. Please try again later.";
+        output.innerHTML = `An error occurred: ${error.message}`;
     }
 });
