@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>jraw.lol | Neon Upload</title>
+    <title>Jraw Upload</title>
     <style>
         body {
             font-family: 'Roboto', Arial, sans-serif;
@@ -15,73 +15,44 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            animation: fadeIn 1s ease-out;
             text-align: center;
         }
 
-        @keyframes fadeIn {
-            0% {
-                opacity: 0;
-            }
-            100% {
-                opacity: 1;
-            }
+        h2 {
+            font-size: 36px;
+            color: #5ab4dc;
+            margin-bottom: 20px;
         }
 
-        h1 {
-            font-size: 48px;
-            color: #f7931e;
-            margin-bottom: 40px;
-            text-shadow: 0 2px 15px rgba(247, 147, 30, 0.8);
-            animation: slideIn 1s ease-out;
+        input[type="file"] {
+            display: none;
         }
 
-        @keyframes slideIn {
-            0% {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .upload-box {
+        .custom-file-upload {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 60px;
-            border: 3px dashed rgba(247, 147, 30, 0.8);
+            padding: 80px;
+            border: 3px dashed rgba(90, 180, 220, 0.8);
             border-radius: 16px;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.1);
             color: #fff;
             cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
             width: 350px;
             margin-bottom: 30px;
         }
 
-        .upload-box:hover {
+        .custom-file-upload:hover {
             background: rgba(255, 255, 255, 0.2);
-            color: #f7931e;
-            transform: scale(1.05);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
-        }
-
-        .upload-box i {
-            font-size: 48px;
-            margin-bottom: 15px;
+            color: #5ab4dc;
         }
 
         button {
-            margin-top: 20px;
-            background: linear-gradient(135deg, #f7931e, #ffa700);
+            background: linear-gradient(135deg, #5ab4dc, #4291af);
             color: white;
             border: none;
-            padding: 15px 40px;
+            padding: 20px 50px;
             border-radius: 32px;
             cursor: pointer;
             font-size: 20px;
@@ -90,91 +61,81 @@
         }
 
         button:hover {
-            background: linear-gradient(135deg, #ffa700, #f7931e);
-            transform: translateY(-3px);
-            box-shadow: 0 4px 15px rgba(255, 167, 0, 0.6);
+            background: linear-gradient(135deg, #4291af, #5ab4dc);
         }
 
-        #output {
+        .output {
             margin-top: 20px;
-            color: #5ab4dc;
             font-size: 18px;
-            animation: fadeIn 0.5s ease-out;
         }
 
-        footer {
-            position: fixed;
-            bottom: 10px;
-            color: #777;
-        }
-
-        footer a {
+        .output a {
             color: #5ab4dc;
             text-decoration: none;
-            font-weight: bold;
         }
 
-        footer a:hover {
-            color: #f7931e;
+        .output a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <h1>jraw.lol</h1>
-    <label class="upload-box">
-        <i class="fas fa-cloud-upload-alt"></i>
-        <span id="fileLabelText">Drag & Drop or Click to Upload</span>
-        <input type="file" id="fileInput" style="display: none;">
-    </label>
-    <button id="uploadButton">Upload</button>
-    <div id="output"></div>
+    <form id="uploadForm">
+        <h2>Upload a File</h2>
+        <label class="custom-file-upload">
+            <span id="fileLabelText">Drag and drop or click to upload</span>
+            <input type="file" name="file" id="fileInput" required>
+        </label>
+        <button type="submit">Upload</button>
+    </form>
 
-    <footer>
-        <p>Made by <a href="https://github.com/your-username" target="_blank">you</a> with 🖤</p>
-    </footer>
+    <div class="output" id="output"></div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
     <script>
-        const uploadButton = document.getElementById("uploadButton");
-        const fileInput = document.getElementById("fileInput");
-        const output = document.getElementById("output");
-        const fileLabelText = document.getElementById("fileLabelText");
+        const uploadForm = document.getElementById('uploadForm');
+        const fileInput = document.getElementById('fileInput');
+        const fileLabelText = document.getElementById('fileLabelText');
+        const output = document.getElementById('output');
 
-        document.querySelector(".upload-box").addEventListener("click", () => {
-            fileInput.click();
-        });
-
-        fileInput.addEventListener("change", () => {
-            const fileName = fileInput.files[0]?.name || "Select File";
+        fileInput.addEventListener('change', function () {
+            const fileName = this.files[0]?.name || "Choose a file...";
             fileLabelText.textContent = fileName;
         });
 
-        uploadButton.addEventListener("click", async () => {
+        uploadForm.addEventListener('submit', async function (event) {
+            event.preventDefault();
             if (!fileInput.files.length) {
-                output.textContent = "Please select a file first.";
+                output.innerHTML = "Please select a file to upload.";
                 return;
             }
 
+            const file = fileInput.files[0];
             const formData = new FormData();
-            formData.append("file", fileInput.files[0]);
+            formData.append('file', file);
 
-            output.textContent = "Uploading...";
+            output.innerHTML = "Uploading...";
 
             try {
-                // Using file.io for uploads
-                const response = await fetch("https://file.io", {
-                    method: "POST",
+                const response = await fetch('https://file.io', {
+                    method: 'POST',
                     body: formData,
                 });
 
-                const data = await response.json();
-                if (data.success) {
-                    output.innerHTML = `File uploaded: <a href="${data.link}" target="_blank">${data.link}</a>`;
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success) {
+                        output.innerHTML = `
+                            File uploaded successfully!<br>
+                            <a href="${data.link}" target="_blank">${data.link}</a>
+                        `;
+                    } else {
+                        output.innerHTML = `Error: ${data.message}`;
+                    }
                 } else {
-                    output.textContent = "Upload failed.";
+                    output.innerHTML = "Error uploading the file. Please try again.";
                 }
             } catch (error) {
-                output.textContent = "Error uploading the file.";
+                output.innerHTML = "An error occurred during the upload.";
             }
         });
     </script>
