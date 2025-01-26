@@ -3,9 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>jraw.lol | Upload</title>
+    <title>jraw.lol | Neon Upload</title>
     <style>
-        /* Same styles as before */
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background: linear-gradient(135deg, #161616, #313131);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            animation: fadeIn 1s ease-out;
+            text-align: center;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        h1 {
+            font-size: 48px;
+            color: #f7931e;
+            margin-bottom: 40px;
+            text-shadow: 0 2px 15px rgba(247, 147, 30, 0.8);
+            animation: slideIn 1s ease-out;
+        }
+
+        @keyframes slideIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .upload-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px;
+            border: 3px dashed rgba(247, 147, 30, 0.8);
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            width: 350px;
+            margin-bottom: 30px;
+        }
+
+        .upload-box:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #f7931e;
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .upload-box i {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        button {
+            margin-top: 20px;
+            background: linear-gradient(135deg, #f7931e, #ffa700);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 32px;
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #ffa700, #f7931e);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(255, 167, 0, 0.6);
+        }
+
+        #output {
+            margin-top: 20px;
+            color: #5ab4dc;
+            font-size: 18px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 10px;
+            color: #777;
+        }
+
+        footer a {
+            color: #5ab4dc;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        footer a:hover {
+            color: #f7931e;
+        }
     </style>
 </head>
 <body>
@@ -13,10 +124,10 @@
     <label class="upload-box">
         <i class="fas fa-cloud-upload-alt"></i>
         <span id="fileLabelText">Drag & Drop or Click to Upload</span>
-        <input type="file" id="fileInput">
+        <input type="file" id="fileInput" style="display: none;">
     </label>
     <button id="uploadButton">Upload</button>
-    <div id="output" style="margin-top: 20px; color: #f7931e;"></div>
+    <div id="output"></div>
 
     <footer>
         <p>Made by <a href="https://github.com/your-username" target="_blank">you</a> with 🖤</p>
@@ -28,6 +139,10 @@
         const fileInput = document.getElementById("fileInput");
         const output = document.getElementById("output");
         const fileLabelText = document.getElementById("fileLabelText");
+
+        document.querySelector(".upload-box").addEventListener("click", () => {
+            fileInput.click();
+        });
 
         fileInput.addEventListener("change", () => {
             const fileName = fileInput.files[0]?.name || "Select File";
